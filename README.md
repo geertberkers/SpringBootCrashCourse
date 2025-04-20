@@ -1,6 +1,43 @@
 # Youtube Tutorials:
 - https://www.youtube.com/watch?v=8X6uvKymTkM&t=202s
+```
+00:00 - Introduction
+3:07 - VPS Hosting
+7:36 - Setting up the VPS
+19:14 - Copying the SSH key for existing servers
+23:52 - Creating an admin user
+35:55 - Creating an SSH alias
+38:58 - Installing Java
+40:53 - Pushing the JAR to our server
+46:06 - Systemd service setup
+58:42 - SSL & Custom domain setup
+1:08:08 - GitHub Actions automation
+1:18:26 - Permitting service relaunch without sudo
+1:20:11 - Creating a GitHub repository secret
+1:21:40 - Testing everything
+1:27:35 - Configuring a firewall
+```
 - https://www.youtube.com/watch?v=tXC9DQRWHUQ&t=24s
+```
+00:00 Prerequisites
+1:43 - What even is a REST API?
+7:25 - What is a backend framework?
+9:55 - What we will build
+11:02 - Creating a Spring Boot project
+15:20 - Project roundtrip
+21:18 - Mongo Atlas setup
+33:14 - Saving notes to MongoDB
+1:06:00 - Base setup for security config
+1:12:55 - Checking notes in Mongo Atlas
+1:14:24 - Spring's Bean mechanism
+1:17:30 - Deleting notes
+1:21:05 - Setting up the user collection
+1:30:12 - JWT generation & verification
+1:57:27 - User registration & login
+2:35:55 - Responding with correct status codes
+2:44:57 - Field validation
+2:52:47 - Trying it out & fixing last bugs
+```
 
 # ENV IntelliJ
 - JWT = Just randam base64 string
