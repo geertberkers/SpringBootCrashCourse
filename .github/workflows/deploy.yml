@@ -35,10 +35,13 @@ jobs:
           LOCAL_JAR_PATH="build/libs/$JAR_NAME"
           REMOTE_SERVER="admin@91.99.8.239"
           REMOTE_JAR_DIR="/opt/notes"
-
+          TIMESTAMP=$(date +%Y%m%d%H%M%S) # Create timestamp
+          BACKUP_JAR_NAME="notes_$TIMESTAMP.jar" # Backup name with timestamp
+          
           rsync -avz -e "ssh" $LOCAL_JAR_PATH $REMOTE_SERVER:$REMOTE_JAR_DIR/$JAR_NAME
 
           ssh $REMOTE_SERVER << EOF
+            mv $REMOTE_JAR_DIR/notes.jar $REMOTE_JAR_DIR/$BACKUP_JAR_NAME
             mv $REMOTE_JAR_DIR/$JAR_NAME $REMOTE_JAR_DIR/notes.jar
             sudo systemctl restart notes.service
           EOF
