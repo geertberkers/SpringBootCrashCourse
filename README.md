@@ -57,8 +57,19 @@ java -jar ...-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 # ENV IntelliJ
 - JWT = Just randam base64 string
 - Mongo DB needs `user:password` and cluster name + db name after `/`
+- JDBC replace `localhost`, `user` and `password`
+
 ```
-JWT_SECRET_BASE64=dENMZEhtNUF5dUN1aFZKY1JhR3NsdFJmemtBNjVnZGNoNVVXNEtUZA==;MONGODB_CONNECTION_STRING=mongodb+srv://user:password@cluster0.iv2js6b.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0
+Past ase single line, but see the parts
+JWT_SECRET_BASE64=dENMZEhtNUF5dUN1aFZKY1JhR3NsdFJmemtBNjVnZGNoNVVXNEtUZA==;MONGODB_CONNECTION_STRING=mongodb+srv://geert:berkers@cluster0.iv2js6b.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0;POSTGRESQL_URL=jdbc:postgresql://localhost:5432/my_db;POSTGRESQL_USER=user;POSTGRESQL_PASSWORD=password
+
+Different parts: 
+JWT_SECRET_BASE64=dENMZEhtNUF5dUN1aFZKY1JhR3NsdFJmemtBNjVnZGNoNVVXNEtUZA==;
+MONGODB_CONNECTION_STRING=mongodb+srv://user:password@cluster0.iv2js6b.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0;
+POSTGRESQL_URL=jdbc:postgresql://localhost:5432/my_db;
+POSTGRESQL_USER=user;
+POSTGRESQL_PASSWORD=password
+
 ```
 
 # Create SSH (no passphrase needed)
