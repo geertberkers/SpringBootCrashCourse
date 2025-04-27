@@ -201,7 +201,7 @@ sudo start notes.service
 
 ## See logs:
 ```
-sudo journal -n 200 -u notes.service -f
+sudo journalctl -n 200 -u notes.service -f
 ```
 
 ## SSL error? Fix IP from hetzner to mongoDB.
