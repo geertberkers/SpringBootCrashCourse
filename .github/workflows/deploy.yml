@@ -48,6 +48,6 @@ jobs:
 
           ssh $REMOTE_SERVER << EOF
             mv $REMOTE_JAR_DIR/notes.jar $REMOTE_JAR_DIR/$BACKUP_JAR_NAME
-            mv $REMOTE_JAR_DIR/$JAR_NAME $REMOTE_JAR_DIR/notes.jar
+            cp $REMOTE_JAR_DIR/$JAR_NAME $REMOTE_JAR_DIR/notes.jar
             sudo systemctl restart notes.service
           EOF
