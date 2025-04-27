@@ -39,6 +39,21 @@
 2:52:47 - Trying it out & fixing last bugs
 ```
 
+- https://www.youtube.com/watch?v=mGo_IToQ7EE
+Different productions (dev/staging/prod)
+
+
+# JDBC Database
+Added info for JDBC Connection via property/environment
+
+# How to run from commandline
+```
+cd buid/libs
+java -jar ...-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+java -jar ...-0.0.1-SNAPSHOT.jar --spring.profiles.active=staging
+java -jar ...-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+```
+
 # ENV IntelliJ
 - JWT = Just randam base64 string
 - Mongo DB needs `user:password` and cluster name + db name after `/`
