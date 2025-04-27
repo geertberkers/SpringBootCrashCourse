@@ -47,6 +47,11 @@ Different productions (dev/staging/prod)
 Added info for JDBC Connection via property/environment
 
 # How to run from commandline
+
+```
+// NOTE: No profile defaults to: 
+No active profile set, falling back to 1 default profile: "default"
+```
 ```
 cd buid/libs
 java -jar ...-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
