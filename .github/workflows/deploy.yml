@@ -94,7 +94,7 @@ jobs:
 
       - name: Trigger auto-merge workflow
         if: env.JAR_ALREADY_EXISTS == 'true'
-        uses: peter-evans/workflow-dispatch@v2
+        uses: peter-evans/workflow-dispatch@v3
         with:
           repository: ${{ github.repository }}
           workflow: auto-merge.yml  # Ensure the name of your merge workflow is correct
