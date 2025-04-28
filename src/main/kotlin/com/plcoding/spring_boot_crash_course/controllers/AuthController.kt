@@ -48,4 +48,6 @@ class AuthController(
     ): AuthService.TokenPair {
         return authService.refresh(body.refreshToken)
     }
+
+    // TODO: Add Delete route!
 }
