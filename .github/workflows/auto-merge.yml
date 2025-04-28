@@ -4,15 +4,17 @@ on:
   pull_request:
     types:
       - opened
+    branches:
+      - master  # Make sure it's triggered for PRs that target master
 
 jobs:
   automerge:
-    if: github.actor == 'github-actions[bot]' # Only if the PR was created by the bot
+    if: github.actor == 'github-actions[bot]'  # Only trigger for PRs created by the bot
     runs-on: ubuntu-latest
 
     permissions:
-      pull-requests: write
-      contents: write
+      pull-requests: write  # Allows the bot to approve and merge PRs
+      contents: write  # Allows the bot to modify the code if needed
 
     steps:
       - name: Auto approve
@@ -24,4 +26,4 @@ jobs:
         uses: pascalgn/automerge-action@v0.15.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MERGE_METHOD: squash # Optional: could be "merge", "squash" or "rebase"
+          MERGE_METHOD: squash  # Squash the commits into one, or you can use "merge" or "rebase"
