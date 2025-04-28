@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.plcoding"
-version = "0.0.4"
+version = "0.0.4-SNAPSHOT"
 
 java {
 	toolchain {
