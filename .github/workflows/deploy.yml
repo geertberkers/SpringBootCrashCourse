@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # Important: allows pushing back
 
       - name: Setup Git config for creating PR
         run: |
@@ -81,9 +83,12 @@ jobs:
         if: env.JAR_ALREADY_EXISTS == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
-          branch: ${{ github.head_ref }}
-          title: "Bump version to new patch because JAR already exists"
-          body: "Automatically bumped version because JAR with this version already exists on the server."
+          commit-message: "Bump version to next patch automatically"
+          title: "Bump version automatically after deploy conflict"
+          body: |
+            This PR was created automatically because the deployed JAR version already exists.
+            The version has been bumped to avoid conflicts.
+          branch: auto/bump-version
           base: master
 
       - name: Deploy JAR to Server
