@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # Important: allows pushing back
+          persist-credentials: true # Allow pushing to the repo later
 
       - name: Setup Git config for creating PR
         run: |
@@ -49,47 +49,48 @@ jobs:
           REMOTE_SERVER="admin@${{ secrets.DEPLOY_SERVER_IP }}"
           REMOTE_JAR_DIR="/opt/notes"
 
-          # Check if file exists
           if ssh $REMOTE_SERVER "[ -f $REMOTE_JAR_DIR/$JAR_NAME ]"; then
             echo "JAR_ALREADY_EXISTS=true" >> $GITHUB_ENV
           else
             echo "JAR_ALREADY_EXISTS=false" >> $GITHUB_ENV
           fi
 
-      - name: Bump version and create PR if JAR exists
+      - name: Bump version locally if JAR exists
         if: env.JAR_ALREADY_EXISTS == 'true'
         run: |
-          # Extract major, minor, patch
           VERSION=$(grep -oP 'version\s*=\s*"\K[^"]+' build.gradle.kts)
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
           PATCH=$(echo $VERSION | cut -d. -f3)
 
-          # Increment patch
           PATCH=$((PATCH + 1))
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
-          # Replace version in build.gradle.kts
           sed -i "s/version = \".*\"/version = \"$NEW_VERSION\"/" build.gradle.kts
 
-          # Create a new branch
-          BRANCH_NAME="bump-version-to-$NEW_VERSION"
+          BRANCH_NAME="auto/bump-version-to-$NEW_VERSION"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
           git checkout -b $BRANCH_NAME
           git add build.gradle.kts
           git commit -m "Bump version to $NEW_VERSION"
           git push origin $BRANCH_NAME
 
-      - name: Create Pull Request
+      - name: Create Pull Request manually
         if: env.JAR_ALREADY_EXISTS == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          commit-message: "Bump version to next patch automatically"
-          title: "Bump version automatically after deploy conflict"
-          body: |
-            This PR was created automatically because the deployed JAR version already exists.
-            The version has been bumped to avoid conflicts.
-          branch: auto/bump-version
-          base: master
+        run: |
+          PR_TITLE="Bump version to ${{ env.NEW_VERSION }} automatically"
+          PR_BODY="This PR was created automatically because the deployed JAR version already exists."
+
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d "{
+              \"title\": \"$PR_TITLE\",
+              \"body\": \"$PR_BODY\",
+              \"head\": \"${{ env.BRANCH_NAME }}\",
+              \"base\": \"master\"
+            }"
 
       - name: Deploy JAR to Server
         if: env.JAR_ALREADY_EXISTS == 'false'
@@ -101,16 +102,18 @@ jobs:
           TIMESTAMP=$(date +%Y%m%d%H%M%S) # Create timestamp
           BACKUP_JAR_NAME="notes_$TIMESTAMP.jar" # Backup name with timestamp
 
-          # Copy new JAR to the server
+          # Copy new JAR to server
           rsync -avz -e "ssh" $LOCAL_JAR_PATH $REMOTE_SERVER:$REMOTE_JAR_DIR/$JAR_NAME
 
           ssh $REMOTE_SERVER << EOF
-            # Backup the current JAR with a timestamp
-            mv $REMOTE_JAR_DIR/notes.jar $REMOTE_JAR_DIR/$BACKUP_JAR_NAME
+            # Backup the current notes.jar
+            if [ -f $REMOTE_JAR_DIR/notes.jar ]; then
+              cp $REMOTE_JAR_DIR/notes.jar $REMOTE_JAR_DIR/$BACKUP_JAR_NAME
+            fi
 
-            # Move the new JAR to the correct location
+            # Replace with the new jar
             mv $REMOTE_JAR_DIR/$JAR_NAME $REMOTE_JAR_DIR/notes.jar
 
-            # Restart the service
+            # Restart service
             sudo systemctl restart notes.service
           EOF
