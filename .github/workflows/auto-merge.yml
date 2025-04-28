@@ -1,0 +1,27 @@
+name: Auto Approve and Merge Version Bump
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  automerge:
+    if: github.actor == 'github-actions[bot]' # Only if the PR was created by the bot
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: Auto approve
+        uses: hmarr/auto-approve-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto merge
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash # Optional: could be "merge", "squash" or "rebase"
